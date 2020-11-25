@@ -1,0 +1,17 @@
+February ,PC,120
+October ,TV,108
+February ,Phone,41
+April ,PC,107
+May ,PC,124
+August ,PC,119
+November ,TV,64
+July ,Phone,80
+June ,Phone,90
+February ,Fridge,609
+August ,Fridge,512
+May ,Fridge,555
+November ,Fridge,555
+December ,TV,23
+August ,PC,62
+August ,Phone,30
+August ,Fridge,55
