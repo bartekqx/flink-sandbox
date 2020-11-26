@@ -7,11 +7,10 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
-
-public class TumblingWindowExample {
+public class SlidingWindowExample {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -34,7 +33,7 @@ public class TumblingWindowExample {
                     }
                 })
                 .keyBy(1)
-                .window(TumblingEventTimeWindows.of(Time.seconds(10)))
+                .window(SlidingEventTimeWindows.of(Time.seconds(2), Time.seconds(1)))
                 .reduce(new ReduceFunction<Tuple3<Long, String, Long>>() {
                     @Override
                     public Tuple3<Long, String, Long> reduce(Tuple3<Long, String, Long> t1,
@@ -45,6 +44,6 @@ public class TumblingWindowExample {
                 });
         sum.writeAsText("/home/user/IdeaProjects/flink-sandbox/outputs/window_sum.txt");
 
-        env.execute("Tumbling Window");
+        env.execute("Sliding Window");
     }
 }
