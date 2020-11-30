@@ -36,24 +36,19 @@ public class EvictorExample {
                 })
                 .keyBy(1)
                 .window(TumblingEventTimeWindows.of(Time.seconds(2)))
-                .evictor(CountEvictor.of(5))
+                .evictor(CountEvictor.of(1))
                 .reduce(new ReduceFunction<Tuple3<Long, String, Long>>() {
                     @Override
-                    public Tuple3<Long, String, Long> reduce(Tuple3<Long, String, Long> t1,
+                      public Tuple3<Long, String, Long> reduce(Tuple3<Long, String, Long> t1,
                                                              Tuple3<Long, String, Long> t2) throws Exception {
                         final long timestamp = System.currentTimeMillis();
                         return Tuple3.of(timestamp, t1.f1, t1.f2 + t2.f2);
                     }
                 });
-        counted.writeToSocket("localhost", 9091, new SerializationSchema<Tuple3<Long, String, Long>>() {
-            @Override
-            public byte[] serialize(Tuple3<Long, String, Long> tuple) {
-                return (tuple.f0 + "," + tuple.f1 + "," + tuple.f2 + "\n").getBytes();
-            }
-        });
+        counted.print();
 
 
-        env.execute("Sliding Window");
+        env.execute("Evictor");
     }
 
 }
