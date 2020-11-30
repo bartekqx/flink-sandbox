@@ -6,12 +6,20 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Random;
+import java.util.UUID;
 
-public class SocketValuesDataSource {
-
+public class SocketEmployeesSource {
     private static final StringBuilder stringBuilder = new StringBuilder();
     private static final Random random = new Random();
 
+    private static final String[] departments = new String[] {
+            "Purchase",
+            "Finance",
+            "Marketing",
+            "Production",
+            "Security",
+            "Algo"
+    };
 
     public static void main(String[] args) throws IOException {
         final ServerSocketChannel serverSocket = ServerSocketChannel.open();
@@ -22,10 +30,11 @@ public class SocketValuesDataSource {
             final ByteBuffer bb = ByteBuffer.allocateDirect(1024);
 
             while (true) {
-                final int value = random.nextInt(1000);
-                final int key = random.nextInt(2);
-                System.out.println(key + ", " + value);
-                final byte[] data = createData(key, value);
+                final String department = departments[random.nextInt(departments.length)];
+                final String employeeUuid = UUID.randomUUID().toString();
+
+                System.out.println(employeeUuid + ", " + department);
+                final byte[] data = createData(employeeUuid, department);
 
                 bb.clear();
                 bb.put(data);
@@ -44,12 +53,12 @@ public class SocketValuesDataSource {
         }
     }
 
-    private static byte[] createData(int key,int value) {
+    private static byte[] createData(String employeeId, String department) {
         stringBuilder.setLength(0);
         stringBuilder
-                .append(key)
+                .append(employeeId)
                 .append(",")
-                .append(value)
+                .append(department)
                 .append("|");
 
         return stringBuilder.toString().getBytes();
